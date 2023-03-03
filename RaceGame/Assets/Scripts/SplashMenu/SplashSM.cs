@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SplashSM : MonoBehaviour
 {
+    public float delayAmount = 1.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,7 +24,7 @@ public class SplashSM : MonoBehaviour
 
     IEnumerator DelayLoad()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(delayAmount);
         UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
     }
 }
