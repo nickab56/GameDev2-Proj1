@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         move();
         steer();
@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
         {
             currentSpeed = Mathf.Lerp(currentSpeed, -maxSpeeed / 2, 0.5f * Time.deltaTime); //Backing up
         }
-        else if (Input.GetKey(KeyCode.S))
+        else 
         {
             currentSpeed = Mathf.Lerp(currentSpeed, 0, 0.5f * Time.deltaTime); // Slow down to stop
         }
