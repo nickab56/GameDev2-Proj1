@@ -6,6 +6,9 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody rb;
 
+    public CheckPointManager CPManager;
+    public SceneManager Manager;
+
     [Header("Player Speeds")]
     public float maxSpeeed;
     private float currentSpeed = 0;
@@ -70,5 +73,13 @@ public class PlayerController : MonoBehaviour
         VecDirection = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + steerDirection *20, transform.eulerAngles.z);
 
         transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, VecDirection, 3 * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.transform.gameObject.CompareTag("CheckPoint 1"))
+        {
+            Manager.GetComponentInChildren<CheckPointManager>().boolPoint1 = false;
+        }
     }
 }
