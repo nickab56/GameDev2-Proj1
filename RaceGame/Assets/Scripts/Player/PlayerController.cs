@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
 
     public CheckPointManager CPManager;
-    public SceneManager Manager;
+    public GameObject Manager;
 
     [Header("Player Speeds")]
     public float maxSpeeed;
@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        Manager = GameObject.FindGameObjectWithTag("SceneManager");
+        CPManager = Manager.GetComponentInChildren<CheckPointManager>();
     }
 
     // Update is called once per frame
@@ -79,7 +81,12 @@ public class PlayerController : MonoBehaviour
     {
         if(other.transform.gameObject.CompareTag("CheckPoint 1"))
         {
-            Manager.GetComponentInChildren<CheckPointManager>().boolPoint1 = false;
+            CPManager.boolPoint1 = true;
+        }
+
+        if(other.transform.gameObject.CompareTag("CheckPoint 2") && CPManager.boolPoint1 == true)
+        {
+            CPManager.boolPoint2 = true;
         }
     }
 }
