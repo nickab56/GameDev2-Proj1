@@ -88,5 +88,40 @@ public class PlayerController : MonoBehaviour
         {
             CPManager.boolPoint2 = true;
         }
+
+        if (other.transform.gameObject.CompareTag("CheckPoint 3") && CPManager.boolPoint2 == true)
+        {
+            CPManager.boolPoint3 = true;
+        }
+
+        if (other.transform.gameObject.CompareTag("CheckPoint 4") && CPManager.boolPoint3 == true)
+        {
+            CPManager.boolPoint4 = true;
+        }
+
+        if (other.transform.gameObject.CompareTag("CheckPoint 5") && CPManager.boolPoint4 == true)
+        {
+            CPManager.boolPoint5 = true;
+        }
+
+        if (other.transform.gameObject.CompareTag("CheckPoint 6") && CPManager.boolPoint5 == true)
+        {
+            CPManager.boolPoint6 = true;
+        }
+
+        if (other.transform.gameObject.CompareTag("CheckPoint 7") && CPManager.boolPoint6 == true)
+        {
+            CPManager.boolPoint7 = true;
+        }
+
+        if (other.transform.gameObject.CompareTag("CheckPoint 8") && CPManager.boolPoint7 == true)
+        {
+            CPManager.boolPoint8 = true;
+        }
+
+        if (other.transform.gameObject.CompareTag("FinalPoint") && CPManager.boolPoint8 == true)
+        {
+            CPManager.boolFinal = true;
+        }
     }
 }

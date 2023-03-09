@@ -7,6 +7,15 @@ TagManager:
   - SceneManager
   - Enemy
   - Wall
+  - CheckPoint 1
+  - CheckPoint 2
+  - CheckPoint 3
+  - CheckPoint 4
+  - CheckPoint 5
+  - CheckPoint 6
+  - CheckPoint 7
+  - CheckPoint 8
+  - FinalPoint
   layers:
   - Default
   - TransparentFX
