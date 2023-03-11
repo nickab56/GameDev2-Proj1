@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public enum AIType { waypoints, attack, none };
+    public enum AIType { waypoints, none };
     public AIType aiType = AIType.none;
-    public float speed = 3;
+
+    public float maxSpeeed = 15;
+    private float currentSpeed = 0;
 
     private WayPoints waypoints;
     private GameObject player;
@@ -15,25 +17,23 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         waypoints = this.GetComponent<WayPoints>();
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
     void Update()
     {
         Vector3 temp = Vector3.zero;
-        // Normal movement 
         if (player != null)
         {
-            temp = speed * Time.deltaTime * ProcessAI();
+            temp = currentSpeed * Time.deltaTime * ProcessAI();
         }
 
-        transform.position += new Vector3(temp.x, temp.y, 0);
+        this.transform.position += new Vector3(temp.x, temp.y, temp.z);
     }
 
     Vector3 ProcessAI()
     {
-        Vector3 dir = player.transform.position - this.transform.position;
-
         // Function that checks if player is within enemy sites
         Vector3 returnDir = CheckPlayerView();
         switch (aiType)
@@ -42,9 +42,6 @@ public class EnemyController : MonoBehaviour
                 break;
             case AIType.waypoints:
                 returnDir = waypoints.EvaluateWaypoint();
-                break;
-            case AIType.attack:
-                returnDir = VectorTrack(dir);
                 break;
             default:
                 break;
@@ -64,27 +61,20 @@ public class EnemyController : MonoBehaviour
         return returnDir;
     }
 
-    private Vector3 VectorTrack(Vector3 rawDirection)
-    {
-        Vector3 temp = new(rawDirection.x, rawDirection.y, rawDirection.z);
-        temp.Normalize();
-        return temp;
-    }
-
     private Vector3 CheckPlayerView()
     {
         float dist = Vector3.Distance(this.transform.position, player.transform.position);
 
-        if (dist <= 5.0f)
+        if (dist <= 50.0f)
         {
-            aiType = AIType.attack;
+            currentSpeed = Mathf.Lerp(currentSpeed, maxSpeeed, 0.5f * Time.deltaTime);
+        }
+        else
+        {
+            currentSpeed = Mathf.Lerp(currentSpeed, maxSpeeed/2, 0.5f * Time.deltaTime);
         }
 
-        if (aiType == AIType.attack && dist > 5.0f)
-        {
-            aiType = AIType.waypoints;
-            return waypoints.FindClosestWaypoint();
-        }
-        return Vector3.zero;
+        aiType = AIType.waypoints;
+        return waypoints.FindClosestWaypoint();
     }
 }
