@@ -42,6 +42,8 @@ public class PlayerController : MonoBehaviour
     {
         move();
         steer();
+        groundNormalRotation();
+        //drift();
     }
 
     private void move()
@@ -69,7 +71,8 @@ public class PlayerController : MonoBehaviour
     private void steer()
     {
         steerDirection = Input.GetAxis("Horizontal"); // gives a value of -1, 0, 1
-        Vector3 VecDirection; 
+        Vector3 VecDirection;
+
         
 
         VecDirection = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + steerDirection *20, transform.eulerAngles.z);
@@ -77,6 +80,42 @@ public class PlayerController : MonoBehaviour
         transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, VecDirection, 3 * Time.deltaTime);
     }
 
+    private void groundNormalRotation()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, -transform.up, out hit, 0.75f))
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.FromToRotation(transform.up * 2, hit.normal) * transform.rotation, 7.5f * Time.deltaTime);
+            touchingGround = true;
+        }
+        else
+        {
+            touchingGround = false;
+        }
+    }
+
+    private void drift()
+    {
+        if(Input.GetKeyDown(KeyCode.V) && touchingGround)
+        {
+            if(steerDirection > 0 )
+            {
+                driftRight = true;
+                driftLeft = false;
+            }
+            else if (steerDirection < 0)
+            {
+                driftRight = false;
+                driftLeft = true;
+            }
+        }
+
+        if(Input.GetKeyDown(KeyCode.V) && touchingGround && currentSpeed > 40 && Input.GetAxis("Horizontal") != 0)
+        {
+            driftTime += Time.deltaTime;
+
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         if(other.transform.gameObject.CompareTag("CheckPoint 1"))
