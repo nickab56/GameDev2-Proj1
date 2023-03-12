@@ -29,17 +29,15 @@ public class EnemyController : MonoBehaviour
             temp = currentSpeed * Time.deltaTime * ProcessAI();
         }
 
-        this.transform.position += new Vector3(temp.x, temp.y, temp.z);
+        this.transform.position += new Vector3(temp.x, 0, temp.z);
     }
 
     Vector3 ProcessAI()
     {
-        // Function that checks if player is within enemy sites
-        Vector3 returnDir = CheckPlayerView();
+        Vector3 returnDir = Vector3.zero;
+        CheckPlayerView();
         switch (aiType)
         {
-            case AIType.none:
-                break;
             case AIType.waypoints:
                 returnDir = waypoints.EvaluateWaypoint();
                 break;
@@ -61,7 +59,7 @@ public class EnemyController : MonoBehaviour
         return returnDir;
     }
 
-    private Vector3 CheckPlayerView()
+    private void CheckPlayerView()
     {
         float dist = Vector3.Distance(this.transform.position, player.transform.position);
 
@@ -73,8 +71,5 @@ public class EnemyController : MonoBehaviour
         {
             currentSpeed = Mathf.Lerp(currentSpeed, maxSpeeed/2, 0.5f * Time.deltaTime);
         }
-
-        aiType = AIType.waypoints;
-        return waypoints.FindClosestWaypoint();
     }
 }

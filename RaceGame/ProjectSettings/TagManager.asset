@@ -16,6 +16,7 @@ TagManager:
   - CheckPoint 7
   - CheckPoint 8
   - FinalPoint
+  - Track90
   layers:
   - Default
   - TransparentFX
