@@ -6,9 +6,10 @@ public class EnemyController : MonoBehaviour
 {
     public enum AIType { waypoints, none };
     public AIType aiType = AIType.none;
+    public Vector3 dir;
 
-    public float maxSpeeed = 15;
-    private float currentSpeed = 0;
+    public float maxSpeeed = 12;
+    public float currentSpeed = 0;
 
     private WayPoints waypoints;
     private GameObject player;
@@ -26,10 +27,16 @@ public class EnemyController : MonoBehaviour
         Vector3 temp = Vector3.zero;
         if (player != null)
         {
-            temp = currentSpeed * Time.deltaTime * ProcessAI();
+            dir = ProcessAI();
+            temp = currentSpeed * Time.deltaTime * dir;
         }
 
         this.transform.position += new Vector3(temp.x, 0, temp.z);
+        
+        if (dir != Vector3.zero)
+        {
+            this.transform.forward = Vector3.Lerp(this.transform.forward, dir, 7.0f * Time.deltaTime);
+        }
     }
 
     Vector3 ProcessAI()
@@ -69,7 +76,7 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            currentSpeed = Mathf.Lerp(currentSpeed, maxSpeeed/2, 0.5f * Time.deltaTime);
+            currentSpeed = Mathf.Lerp(currentSpeed, maxSpeeed/3, 0.5f * Time.deltaTime);
         }
     }
 }
