@@ -17,6 +17,7 @@ public class WayPoints : MonoBehaviour
     {
         EnemyAi = this.GetComponent<EnemyController>();
         dir = Vector3.zero;
+        SortWaypoints();
         currentWaypointTarget = waypoints[0];
     }
 
@@ -35,15 +36,33 @@ public class WayPoints : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
     private void OnTriggerEnter(Collider collider)
     {
         if (waypoints.Contains(collider.gameObject))
         {
-            currentWaypoint++;
-            currentWaypoint %= waypoints.Length;
+            int index = System.Array.FindIndex(waypoints, x => x.name == collider.gameObject.name);
+            if (currentWaypoint == index)
+            {
+                currentWaypoint++;
+                currentWaypoint %= waypoints.Length;
+            }
+        }
+    }
+
+    private void SortWaypoints()
+    {
+        waypoints = waypoints.OrderBy(x => x.name).ToArray();
+    }
+
+    // Debug
+    private void PrintWaypoints()
+    {
+        foreach (GameObject waypoint in waypoints)
+        {
+            Debug.Log(waypoint.name);
         }
     }
 }

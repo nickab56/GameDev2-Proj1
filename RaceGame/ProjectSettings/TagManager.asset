@@ -17,6 +17,7 @@ TagManager:
   - CheckPoint 8
   - FinalPoint
   - Track90
+  - Waypoint
   layers:
   - Default
   - TransparentFX
