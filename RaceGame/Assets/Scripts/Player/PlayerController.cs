@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Game Rules")]
+
+    public CheckPointManager CPManager;
+    public GameObject Manager;
+
+
     private float horizontalInput;
     private float verticalInput;
     private float steerAngle;
