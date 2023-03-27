@@ -91,13 +91,13 @@ public class EnemyController : MonoBehaviour
         switch (aIDifficulty)
         {
             case AIDifficulty.EASY:
-                lerpConstant = 1f;
+                lerpConstant = 0.5f;
                 return Random.Range(15f, 17f);
             case AIDifficulty.MEDIUM:
-                lerpConstant = 0.5f;
+                lerpConstant = 0.25f;
                 return Random.Range(22.5f, 26f);
             case AIDifficulty.HARD:
-                lerpConstant = 0.25f;
+                lerpConstant = 0.1f;
                 return Random.Range(30f,35f);
             default:
                 break;

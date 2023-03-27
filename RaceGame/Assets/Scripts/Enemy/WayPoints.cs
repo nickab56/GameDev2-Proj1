@@ -20,12 +20,11 @@ public class WayPoints : MonoBehaviour
         dir = Vector3.zero;
         SortWaypoints();
         currentWaypointTarget = waypoints[0];
-        pointOnTarget = RandomPointInWaypoint(waypoints[currentWaypoint]);
+        //pointOnTarget = RandomPointInWaypoint(waypoints[currentWaypoint]);
     }
 
     public Vector3 EvaluateWaypoint()
     {
-        //dir = pointOnTarget - this.transform.position;
         dir = waypoints[currentWaypoint].transform.position - this.transform.position;
         dir.Normalize();
         return dir;
@@ -59,7 +58,7 @@ public class WayPoints : MonoBehaviour
     private Vector3 RandomPointInWaypoint(GameObject waypoint)
     {
         Bounds bounds = waypoint.GetComponent<BoxCollider>().bounds;
-        Vector3 point = new(Random.Range(bounds.min.x, bounds.max.x), Random.Range(bounds.min.y, bounds.max.y), Random.Range(bounds.min.z, bounds.max.z));
+        Vector3 point = new(Random.Range(bounds.min.x, bounds.max.x), this.transform.position.y, Random.Range(bounds.min.z, bounds.max.z));
         return point;
     }
 }
