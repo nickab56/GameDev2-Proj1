@@ -947,7 +947,27 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2140468203}
     - target: {fileID: 1178569596, guid: 13062ba53f562b94d8bedfacb55e8378, type: 3}
+      propertyPath: aIDifficulty
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1178569596, guid: 13062ba53f562b94d8bedfacb55e8378, type: 3}
       propertyPath: currentSpeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1035406275302612630, guid: 13062ba53f562b94d8bedfacb55e8378, type: 3}
+      propertyPath: m_Constraints
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1035406275302612630, guid: 13062ba53f562b94d8bedfacb55e8378, type: 3}
+      propertyPath: m_Interpolate
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1035406275302612630, guid: 13062ba53f562b94d8bedfacb55e8378, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1035406275302612630, guid: 13062ba53f562b94d8bedfacb55e8378, type: 3}
+      propertyPath: m_CollisionDetection
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4675964912613162814, guid: 13062ba53f562b94d8bedfacb55e8378, type: 3}
@@ -956,7 +976,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4675964912613162814, guid: 13062ba53f562b94d8bedfacb55e8378, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.38
+      value: -4.96
       objectReference: {fileID: 0}
     - target: {fileID: 4675964912613162814, guid: 13062ba53f562b94d8bedfacb55e8378, type: 3}
       propertyPath: m_LocalPosition.y
@@ -996,6 +1016,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5453733790810580356, guid: 13062ba53f562b94d8bedfacb55e8378, type: 3}
       propertyPath: m_Name
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5453733790810580356, guid: 13062ba53f562b94d8bedfacb55e8378, type: 3}
+      propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 5801955852218596433, guid: 13062ba53f562b94d8bedfacb55e8378, type: 3}
@@ -2043,7 +2067,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2806714669947893885, guid: 8a8f57edf3523624eb9f886833e8e97a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.7190075
+      value: -0.22
       objectReference: {fileID: 0}
     - target: {fileID: 2806714669947893885, guid: 8a8f57edf3523624eb9f886833e8e97a, type: 3}
       propertyPath: m_LocalPosition.y

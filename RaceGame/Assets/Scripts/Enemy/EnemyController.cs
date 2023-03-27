@@ -5,12 +5,16 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public enum AIType { waypoints, none };
+    public enum AIDifficulty { NONE, EASY, MEDIUM, HARD }
+    
+    public AIDifficulty aIDifficulty = AIDifficulty.NONE;
     public AIType aiType = AIType.none;
     public Vector3 dir;
 
-    public float maxSpeeed = 12;
+    public float maxSpeed = 12;
     public float currentSpeed = 0;
-
+    
+    private float lerpConstant;
     private WayPoints waypoints;
     private GameObject player;
 
@@ -19,6 +23,8 @@ public class EnemyController : MonoBehaviour
     {
         waypoints = this.GetComponent<WayPoints>();
         player = GameObject.FindGameObjectWithTag("Player");
+        // Set max speed and lerp constant based on enemy's difficulty
+        maxSpeed = GetMaxSpeed();
     }
 
     // Update is called once per frame
@@ -72,11 +78,30 @@ public class EnemyController : MonoBehaviour
 
         if (dist <= 50.0f)
         {
-            currentSpeed = Mathf.Lerp(currentSpeed, maxSpeeed, 0.5f * Time.deltaTime);
+            currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed, lerpConstant * Time.deltaTime);
         }
         else
         {
-            currentSpeed = Mathf.Lerp(currentSpeed, maxSpeeed/1.5f, 0.5f * Time.deltaTime);
+            currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed/1.5f, lerpConstant * Time.deltaTime);
         }
+    }
+
+    float GetMaxSpeed()
+    {
+        switch (aIDifficulty)
+        {
+            case AIDifficulty.EASY:
+                lerpConstant = 1f;
+                return 11f;
+            case AIDifficulty.MEDIUM:
+                lerpConstant = 0.75f;
+                return 13f;
+            case AIDifficulty.HARD:
+                lerpConstant = 0.5f;
+                return 15f;
+            default:
+                break;
+        }
+        return 0f;
     }
 }

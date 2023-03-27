@@ -10,6 +10,7 @@ public class WayPoints : MonoBehaviour
 
     int currentWaypoint = 0;
     GameObject currentWaypointTarget;
+    Vector3 pointOnTarget;
 
     private EnemyController EnemyAi;
 
@@ -19,16 +20,13 @@ public class WayPoints : MonoBehaviour
         dir = Vector3.zero;
         SortWaypoints();
         currentWaypointTarget = waypoints[0];
+        pointOnTarget = RandomPointInWaypoint(waypoints[currentWaypoint]);
     }
 
     public Vector3 EvaluateWaypoint()
     {
-        float dirX = 0;
-        dir = waypoints[currentWaypoint].transform.position - this.transform.position;
-        dir.x += dirX;
-        dir.y += dirX;
-        dir.z += dirX;
-
+        dir = pointOnTarget - this.transform.position;
+        //dir = waypoints[currentWaypoint].transform.position - this.transform.position;
         dir.Normalize();
         return dir;
     }
@@ -36,7 +34,7 @@ public class WayPoints : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnTriggerEnter(Collider collider)
@@ -48,6 +46,7 @@ public class WayPoints : MonoBehaviour
             {
                 currentWaypoint++;
                 currentWaypoint %= waypoints.Length;
+                pointOnTarget = RandomPointInWaypoint(waypoints[currentWaypoint]);
             }
         }
     }
@@ -57,12 +56,10 @@ public class WayPoints : MonoBehaviour
         waypoints = waypoints.OrderBy(x => x.name).ToArray();
     }
 
-    // Debug
-    private void PrintWaypoints()
+    private Vector3 RandomPointInWaypoint(GameObject waypoint)
     {
-        foreach (GameObject waypoint in waypoints)
-        {
-            Debug.Log(waypoint.name);
-        }
+        Bounds bounds = waypoint.GetComponent<BoxCollider>().bounds;
+        Vector3 point = new(Random.Range(bounds.min.x, bounds.max.x), Random.Range(bounds.min.y, bounds.max.y), Random.Range(bounds.min.z, bounds.max.z));
+        return point;
     }
 }
