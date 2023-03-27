@@ -25,8 +25,8 @@ public class WayPoints : MonoBehaviour
 
     public Vector3 EvaluateWaypoint()
     {
-        dir = pointOnTarget - this.transform.position;
-        //dir = waypoints[currentWaypoint].transform.position - this.transform.position;
+        //dir = pointOnTarget - this.transform.position;
+        dir = waypoints[currentWaypoint].transform.position - this.transform.position;
         dir.Normalize();
         return dir;
     }

@@ -41,7 +41,7 @@ public class EnemyController : MonoBehaviour
         
         if (dir != Vector3.zero)
         {
-            this.transform.forward = Vector3.Lerp(this.transform.forward, dir, 25.0f * Time.deltaTime);
+            this.transform.forward = Vector3.Lerp(this.transform.forward, dir, 3.0f * Time.deltaTime);
         }
     }
 
@@ -92,13 +92,13 @@ public class EnemyController : MonoBehaviour
         {
             case AIDifficulty.EASY:
                 lerpConstant = 1f;
-                return 11f;
+                return Random.Range(15f, 17f);
             case AIDifficulty.MEDIUM:
-                lerpConstant = 0.75f;
-                return 13f;
-            case AIDifficulty.HARD:
                 lerpConstant = 0.5f;
-                return 15f;
+                return Random.Range(22.5f, 26f);
+            case AIDifficulty.HARD:
+                lerpConstant = 0.25f;
+                return Random.Range(30f,35f);
             default:
                 break;
         }
