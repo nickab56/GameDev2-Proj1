@@ -11,6 +11,11 @@ public class EnemyController : MonoBehaviour
     public AIType aiType = AIType.none;
     public Vector3 dir;
 
+    public int position;
+    public float lap1;
+    public float lap2;
+    public float final;
+
     public float maxSpeed = 12;
     public float currentSpeed = 0;
     

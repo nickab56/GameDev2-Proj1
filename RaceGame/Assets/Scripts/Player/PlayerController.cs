@@ -9,6 +9,10 @@ public class PlayerController : MonoBehaviour
     public CheckPointManager CPManager;
     public GameObject Manager;
 
+    public int position;
+    public float lap1;
+    public float lap2;
+    public float final;
 
     private float horizontalInput;
     private float verticalInput;
