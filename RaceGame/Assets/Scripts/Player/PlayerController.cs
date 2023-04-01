@@ -9,13 +9,15 @@ public class PlayerController : MonoBehaviour
     public CheckPointManager CPManager;
     public GameObject Manager;
 
+    public AudioSource CarEngine;
+
     public int position;
     public float lap1;
     public float lap2;
     public float final;
 
     private float horizontalInput;
-    private float verticalInput;
+    public float verticalInput;
     private float steerAngle;
     private bool isBreaking;
     [Header("Wheel Colliders")]
@@ -46,6 +48,13 @@ public class PlayerController : MonoBehaviour
     {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
+        if (Input.GetAxis("Vertical") != 0)
+        {
+            if (CarEngine.isPlaying != true)
+                CarEngine.Play();
+        }
+        else
+            CarEngine.Stop();
         isBreaking = Input.GetKey(KeyCode.Space);
     }
 
