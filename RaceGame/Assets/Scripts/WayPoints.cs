@@ -61,6 +61,7 @@ public class WayPoints : MonoBehaviour
                     this.gameObject.GetComponent<PlayerController>().final = sceneManager.stopwatch;
 
                     // If player, load game over scene
+                    Constants.C.RaceFinished = true;
                     StartCoroutine(LoadGameOver());
                 }
 
