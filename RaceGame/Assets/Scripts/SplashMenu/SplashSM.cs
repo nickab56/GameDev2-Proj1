@@ -25,6 +25,6 @@ public class SplashSM : MonoBehaviour
     IEnumerator DelayLoad()
     {
         yield return new WaitForSeconds(delayAmount);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("RaceScene");
     }
 }
