@@ -12,9 +12,9 @@ public class PlayerController : MonoBehaviour
     public AudioSource CarEngine;
 
     public int position;
-    public float lap1;
-    public float lap2;
-    public float final;
+    // Times are in seconds
+    public float lap1 = 0;
+    public float final = 7200;
 
     private float horizontalInput;
     public float verticalInput;
@@ -35,6 +35,12 @@ public class PlayerController : MonoBehaviour
     public float motorForce = 50f;
     public float brakeForce = 0f;
 
+    private WayPoints waypoints;
+
+    private void Start()
+    {
+        waypoints = this.GetComponent<WayPoints>();
+    }
 
     private void FixedUpdate()
     {
@@ -42,6 +48,7 @@ public class PlayerController : MonoBehaviour
         HandleMotor();
         HandleSteering();
         UpdateWheels();
+        Vector3 tmp = waypoints.EvaluateWaypoint();
     }
 
     private void GetInput()

@@ -12,9 +12,9 @@ public class EnemyController : MonoBehaviour
     public Vector3 dir;
 
     public int position;
-    public float lap1;
-    public float lap2;
-    public float final;
+    // Time is in seconds
+    public float lap1 = 0;
+    public float final = 7200;
 
     public float currentSpeed = 0;
 
@@ -96,13 +96,13 @@ public class EnemyController : MonoBehaviour
         {
             case AIDifficulty.EASY:
                 lerpConstant = 0.5f;
-                return Random.Range(15f, 17f); // 15, 17
+                return Random.Range(15f, 17f);
             case AIDifficulty.MEDIUM:
                 lerpConstant = 0.25f;
-                return Random.Range(22.5f, 26f); // 22.5, 26
+                return Random.Range(22.5f, 26f);
             case AIDifficulty.HARD:
                 lerpConstant = 0.1f;
-                return Random.Range(30f, 35f); // 30, 35
+                return Random.Range(30f, 35f);
             default:
                 break;
         }

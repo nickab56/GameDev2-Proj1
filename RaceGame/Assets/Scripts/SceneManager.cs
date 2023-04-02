@@ -20,7 +20,7 @@ public class SceneManager : MonoBehaviour
     void Update()
     {
         // Todo: Update player position
-        //UpdatePosition();
+        UpdatePosition();
     }
 
     public void PlayAgain()
@@ -45,23 +45,53 @@ public class SceneManager : MonoBehaviour
     {
         // FORMAT:
         // Format = (Final time (in s) | Max time (1 hr in s) + ((1 | 0) * 100) - currentWaypoint - (distance/1000)
-        // Still has a lap to go (0 means no), current waypoint, distance from next waypoint
-        SortedDictionary<float, GameObject> positions = new SortedDictionary<float, GameObject>();
+        // If not complete, set to max time in seconds, 1 * 100 if the racer still has a lap to go (0 means no), current waypoint, distance from next waypoint
+        SortedList<float, GameObject> positions = new();
 
         // Go through all racers
         GameObject[] racers = GameObject.FindGameObjectsWithTag("Enemy").Concat(GameObject.FindGameObjectsWithTag("Player")).ToArray();
         foreach (GameObject racer in racers)
         {
-            // Check if player/enemy has finished lap 1
-            int hasFinishedFirstLap = 1;
-            // Get index of current waypoint
-            int currentWaypoint = 1;
-            // Calculate distance from next waypoint
-            int d = 2;
-            float n = (hasFinishedFirstLap * 100) + currentWaypoint + (d / 1000); 
+            float n = 0;
+            n = racer.CompareTag("Player") ? racer.GetComponent<PlayerController>().final : racer.GetComponent<EnemyController>().final;
+
+            // Check if player/enemy has finished
+            if (n < 7200)
+            {
+                // Player has finished, push result to positions
+                positions.Add(n, racer);
+                continue;
+            }
+            
+            // Check if player has finished lap 1
+            bool finishedLap1 = racer.CompareTag("Player") ? racer.GetComponent<PlayerController>().lap1 != 0 : racer.GetComponent<EnemyController>().lap1 != 0;
+            if (!finishedLap1)
+            {
+                n += 100;
+            }
+
+            // Get current waypoint and subtract it from n
+            n -= racer.GetComponent<WayPoints>().currentWaypoint;
+
+            // Get distance from next waypoint and subtract it from n
+            n -= (racer.GetComponent<WayPoints>().distanceFromWaypoint / 1000);
+
             positions.Add(n, racer);
         }
 
         // Update positions using sorted dictionary
+        foreach (var position in positions.OrderBy(p => p.Key))
+        {
+            // work with pair.Key and pair.Value
+            GameObject gameObject = position.Value;
+            Debug.Log("Racer: " + gameObject.name + " Position: " + position.Key);
+            if (gameObject.CompareTag("Player"))
+            {
+                gameObject.GetComponent<PlayerController>().position = positions.IndexOfKey(position.Key) + 1;
+            } else
+            {
+                gameObject.GetComponent<EnemyController>().position = positions.IndexOfKey(position.Key) + 1;
+            }
+        }
     }
 }

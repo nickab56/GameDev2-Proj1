@@ -7,8 +7,9 @@ public class WayPoints : MonoBehaviour
 {
     public GameObject[] waypoints;
     public Vector3 dir;
+    public int currentWaypoint = 0;
+    public float distanceFromWaypoint = 0;
 
-    int currentWaypoint = 0;
     GameObject currentWaypointTarget;
     Vector3 pointOnTarget;
 
@@ -27,6 +28,7 @@ public class WayPoints : MonoBehaviour
     public Vector3 EvaluateWaypoint()
     {
         dir = pointOnTarget - this.transform.position;
+        distanceFromWaypoint = Vector3.Distance(this.transform.position, pointOnTarget);
         //dir = waypoints[currentWaypoint].transform.position - this.transform.position;
         dir.Normalize();
         return dir;
@@ -62,6 +64,7 @@ public class WayPoints : MonoBehaviour
         Vector3 point = new(Random.Range(bounds.min.x, bounds.max.x), this.transform.position.y, Random.Range(bounds.min.z, bounds.max.z));
         return point;
     }
+
     IEnumerator Reset()
     {
         yield return new WaitForEndOfFrame();
