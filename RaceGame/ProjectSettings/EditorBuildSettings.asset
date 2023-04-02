@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SplashScene.unity
     guid: aa893ce4eb484f74ab88dee2cb6648c8
+  - enabled: 1
+    path: Assets/Scenes/RaceScene.unity
+    guid: ffbfe8ffc9f58ff4eb427341f27bea32
   m_configObjects: {}
