@@ -5,31 +5,31 @@ using UnityEngine;
 
 public class WayPoints : MonoBehaviour
 {
-    public GameObject[] waypoints;
+    public int currentWaypoint;
+    public double distanceFromWaypoint;
+    public int currentLap;
+
     public Vector3 dir;
-    public int currentWaypoint = 0;
-    public float distanceFromWaypoint = 0;
+    public Vector3 pointOnTarget;
 
-    GameObject currentWaypointTarget;
-    Vector3 pointOnTarget;
+    public WayPointManager wayPointManager;
 
-    private EnemyController EnemyAi;
     private bool isColliding = false;
 
     void Start()
     {
-        EnemyAi = this.GetComponent<EnemyController>();
+        currentWaypoint = 0;
+        distanceFromWaypoint = 0;
         dir = Vector3.zero;
-        SortWaypoints();
-        currentWaypointTarget = waypoints[0];
-        pointOnTarget = RandomPointInWaypoint(waypoints[currentWaypoint]);
+        currentLap = 1;
+        isColliding = false;
+        pointOnTarget = wayPointManager.RandomPointInWaypoint(wayPointManager.mp1Waypoints[0]);
     }
 
     public Vector3 EvaluateWaypoint()
     {
         dir = pointOnTarget - this.transform.position;
         distanceFromWaypoint = Vector3.Distance(this.transform.position, pointOnTarget);
-        //dir = waypoints[currentWaypoint].transform.position - this.transform.position;
         dir.Normalize();
         return dir;
     }
@@ -43,26 +43,12 @@ public class WayPoints : MonoBehaviour
     private void OnTriggerEnter(Collider collider)
     {
         if (isColliding) return;
-        isColliding = true;
-        if (waypoints.Contains(collider.gameObject))
+        if (collider.CompareTag("Waypoint"))
         {
-            currentWaypoint++;
-            currentWaypoint %= waypoints.Length;
-            pointOnTarget = RandomPointInWaypoint(waypoints[currentWaypoint]);
+            isColliding = true;
+            wayPointManager.UpdateWaypoint(this);
         }
         StartCoroutine(Reset());
-    }
-
-    private void SortWaypoints()
-    {
-        waypoints = waypoints.OrderBy(x => x.name).ToArray();
-    }
-
-    private Vector3 RandomPointInWaypoint(GameObject waypoint)
-    {
-        Bounds bounds = waypoint.GetComponent<BoxCollider>().bounds;
-        Vector3 point = new(Random.Range(bounds.min.x, bounds.max.x), this.transform.position.y, Random.Range(bounds.min.z, bounds.max.z));
-        return point;
     }
 
     IEnumerator Reset()

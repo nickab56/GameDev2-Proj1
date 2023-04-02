@@ -46,13 +46,13 @@ public class SceneManager : MonoBehaviour
         // FORMAT:
         // Format = (Final time (in s) | Max time (1 hr in s) + ((1 | 0) * 100) - currentWaypoint - (distance/1000)
         // If not complete, set to max time in seconds, 1 * 100 if the racer still has a lap to go (0 means no), current waypoint, distance from next waypoint
-        SortedList<float, GameObject> positions = new();
+        SortedList<double, GameObject> positions = new();
 
         // Go through all racers
         GameObject[] racers = GameObject.FindGameObjectsWithTag("Enemy").Concat(GameObject.FindGameObjectsWithTag("Player")).ToArray();
         foreach (GameObject racer in racers)
         {
-            float n = 0;
+            double n = 0;
             n = racer.CompareTag("Player") ? racer.GetComponent<PlayerController>().final : racer.GetComponent<EnemyController>().final;
 
             // Check if player/enemy has finished
@@ -82,9 +82,7 @@ public class SceneManager : MonoBehaviour
         // Update positions using sorted dictionary
         foreach (var position in positions.OrderBy(p => p.Key))
         {
-            // work with pair.Key and pair.Value
             GameObject gameObject = position.Value;
-            Debug.Log("Racer: " + gameObject.name + " Position: " + position.Key);
             if (gameObject.CompareTag("Player"))
             {
                 gameObject.GetComponent<PlayerController>().position = positions.IndexOfKey(position.Key) + 1;

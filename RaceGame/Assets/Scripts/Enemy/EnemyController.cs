@@ -80,9 +80,14 @@ public class EnemyController : MonoBehaviour
     {
         float dist = Vector3.Distance(this.transform.position, player.transform.position);
 
+        // Adjust AI's speed based on distance from player
         if (dist <= 50.0f)
         {
             currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed, lerpConstant * Time.deltaTime);
+        }
+        else if (dist > 50.0f && player.GetComponent<PlayerController>().position > position)
+        {
+            currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed * 2, lerpConstant * Time.deltaTime);
         }
         else
         {
@@ -107,5 +112,19 @@ public class EnemyController : MonoBehaviour
                 break;
         }
         return 0f;
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        // Determine if racer has finished lap
+        //if (collider.gameObject.CompareTag("EndPoint"))
+        //{
+            // Switch waypoint arrays
+            // Reset current waypoint
+            // Get new pointOnTarget
+            //waypoints.currentWaypoint = 0;
+            //waypoints.currentWaypoint %= waypoints.waypoints.Length;
+            //pointOnTarget = waypoints.RandomPointInWaypoint(waypoints.waypoints[waypoints.currentWaypoint]);
+        //}
     }
 }
