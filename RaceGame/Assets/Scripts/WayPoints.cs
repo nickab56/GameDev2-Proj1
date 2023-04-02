@@ -13,6 +13,7 @@ public class WayPoints : MonoBehaviour
     public Vector3 pointOnTarget;
 
     public WayPointManager wayPointManager;
+    public SceneManager sceneManager;
 
     private bool isColliding = false;
     private int wayPointsCrossed;
@@ -39,7 +40,6 @@ public class WayPoints : MonoBehaviour
     void Update()
     {
         isColliding = false;
-        Debug.Log("Racer: " + this.gameObject.name + " Current Waypoint: " + currentWaypoint);
     }
 
     private void OnTriggerEnter(Collider collider)
@@ -52,11 +52,14 @@ public class WayPoints : MonoBehaviour
             {
                 if (this.gameObject.CompareTag("Enemy"))
                 {
-                    // Destroy Game Object
-                    //Destroy(this.gameObject);
+                    // Get time
+                    this.gameObject.GetComponent<EnemyController>().final = sceneManager.stopwatch;
                 }
                 else if (this.gameObject.CompareTag("Player"))
                 {
+                    // Get time
+                    this.gameObject.GetComponent<PlayerController>().final = sceneManager.stopwatch;
+
                     // If player, load game over scene
                     Constants.C.RaceFinished = true;
                     StartCoroutine(LoadGameOver());
@@ -72,7 +75,13 @@ public class WayPoints : MonoBehaviour
                 wayPointsCrossed = 0;
 
                 // Get time for player
-                
+                if (this.gameObject.CompareTag("Player"))
+                {
+                    this.gameObject.GetComponent<PlayerController>().lap1 = sceneManager.stopwatch;
+                } else
+                {
+                    this.gameObject.GetComponent<EnemyController>().lap1 = sceneManager.stopwatch;
+                }
 
                 // Update lap
                 currentLap++;

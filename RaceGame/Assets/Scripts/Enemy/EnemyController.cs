@@ -41,6 +41,7 @@ public class EnemyController : MonoBehaviour
             dir = ProcessAI();
             temp = currentSpeed * Time.deltaTime * dir;
         }
+
         this.transform.position += new Vector3(temp.x, 0, temp.z);
 
         if (dir != Vector3.zero)
