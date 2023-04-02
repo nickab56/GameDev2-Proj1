@@ -29,8 +29,17 @@ public class WayPointManager : MonoBehaviour
     public Vector3 RandomPointInWaypoint(GameObject waypoint)
     {
         Bounds bounds = waypoint.GetComponent<BoxCollider>().bounds;
-        Vector3 point = new(Random.Range(bounds.min.x, bounds.max.x), this.transform.position.y, Random.Range(bounds.min.z, bounds.max.z));
+        Vector3 point = new(Random.Range(bounds.min.x, bounds.max.x), waypoint.transform.position.y, Random.Range(bounds.min.z, bounds.max.z));
         return point;
+    }
+
+    public int GetLength(WayPoints racer)
+    {
+        if (racer.currentLap == 1)
+        {
+            return mp1Waypoints.Length;
+        }
+        return mp2Waypoints.Length;
     }
 
     public void UpdateWaypoint(WayPoints racer)

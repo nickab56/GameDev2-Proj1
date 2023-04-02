@@ -101,30 +101,16 @@ public class EnemyController : MonoBehaviour
         {
             case AIDifficulty.EASY:
                 lerpConstant = 0.5f;
-                return Random.Range(15f, 17f);
+                return Random.Range(7f, 9f);
             case AIDifficulty.MEDIUM:
                 lerpConstant = 0.25f;
-                return Random.Range(22.5f, 26f);
+                return Random.Range(11f, 13f);
             case AIDifficulty.HARD:
                 lerpConstant = 0.1f;
-                return Random.Range(30f, 35f);
+                return Random.Range(15f, 17f);
             default:
                 break;
         }
         return 0f;
-    }
-
-    private void OnTriggerEnter(Collider collider)
-    {
-        // Determine if racer has finished lap
-        //if (collider.gameObject.CompareTag("EndPoint"))
-        //{
-            // Switch waypoint arrays
-            // Reset current waypoint
-            // Get new pointOnTarget
-            //waypoints.currentWaypoint = 0;
-            //waypoints.currentWaypoint %= waypoints.waypoints.Length;
-            //pointOnTarget = waypoints.RandomPointInWaypoint(waypoints.waypoints[waypoints.currentWaypoint]);
-        //}
     }
 }

@@ -6,14 +6,23 @@ using UnityEngine;
 public class SceneManager : MonoBehaviour
 {
     public float delayAmount = 1f;
+    public float timer;
+    public int countdown = 3;
 
     public AudioSource teleportation;
     public GameObject image;
 
+    private bool racingEnabled;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        timer = 0;
+        racingEnabled = true;
+        ToggleRacingScripts();
+        StartCoroutine(RaceCountdown());
+        ToggleRacingScripts();
+        // UI text for GO!
     }
 
     // Update is called once per frame
@@ -49,7 +58,7 @@ public class SceneManager : MonoBehaviour
         SortedList<double, GameObject> positions = new();
 
         // Go through all racers
-        GameObject[] racers = GameObject.FindGameObjectsWithTag("Enemy").Concat(GameObject.FindGameObjectsWithTag("Player")).ToArray();
+        GameObject[] racers = GetAllRacers();
         foreach (GameObject racer in racers)
         {
             double n = 0;
@@ -74,7 +83,7 @@ public class SceneManager : MonoBehaviour
             n -= racer.GetComponent<WayPoints>().currentWaypoint;
 
             // Get distance from next waypoint and subtract it from n
-            n -= (racer.GetComponent<WayPoints>().distanceFromWaypoint / 1000);
+            n -= (racer.GetComponent<WayPoints>().distanceFromWaypoint / 10000);
 
             positions.Add(n, racer);
         }
@@ -90,6 +99,58 @@ public class SceneManager : MonoBehaviour
             {
                 gameObject.GetComponent<EnemyController>().position = positions.IndexOfKey(position.Key) + 1;
             }
+        }
+    }
+
+    private GameObject[] GetAllRacers()
+    {
+        return GameObject.FindGameObjectsWithTag("Enemy").Concat(GameObject.FindGameObjectsWithTag("Player")).ToArray();
+    }
+    
+    private void ToggleRacingScripts()
+    {
+        GameObject[] racers = GetAllRacers();
+        if (racingEnabled)
+        {
+            foreach (GameObject racer in racers)
+            {
+                // Check if player or enemy
+                if (racer.gameObject.tag == "Player")
+                {
+                    racer.GetComponent<PlayerController>().enabled = false;
+                } else
+                {
+                    racer.GetComponent<EnemyController>().enabled = false;
+                }
+            }
+            racingEnabled = false;
+        } else
+        {
+            foreach (GameObject racer in racers)
+            {
+                // Check if player or enemy
+                // Check if player or enemy
+                if (racer.gameObject.tag == "Player")
+                {
+                    racer.GetComponent<PlayerController>().enabled = true;
+                }
+                else
+                {
+                    racer.GetComponent<EnemyController>().enabled = true;
+                }
+            }
+            racingEnabled = true;
+        }
+    }
+
+    IEnumerator RaceCountdown()
+    {
+        yield return new WaitForSeconds(1);
+        // Update canvas text
+        countdown--;
+        if (countdown > 0)
+        {
+            StartCoroutine(RaceCountdown());
         }
     }
 }

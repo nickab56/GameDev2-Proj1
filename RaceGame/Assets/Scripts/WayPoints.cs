@@ -15,14 +15,15 @@ public class WayPoints : MonoBehaviour
     public WayPointManager wayPointManager;
 
     private bool isColliding = false;
+    private int wayPointsCrossed;
 
     void Start()
     {
         currentWaypoint = 0;
         distanceFromWaypoint = 0;
+        wayPointsCrossed = 0;
         dir = Vector3.zero;
         currentLap = 1;
-        isColliding = false;
         pointOnTarget = wayPointManager.RandomPointInWaypoint(wayPointManager.mp1Waypoints[0]);
     }
 
@@ -38,23 +39,61 @@ public class WayPoints : MonoBehaviour
     void Update()
     {
         isColliding = false;
+        Debug.Log("Racer: " + this.gameObject.name + " Current Waypoint: " + currentWaypoint);
     }
 
     private void OnTriggerEnter(Collider collider)
     {
         if (isColliding) return;
-        if (collider.CompareTag("Waypoint"))
+        isColliding = true;
+        if (collider.CompareTag("FinalPoint"))
         {
-            isColliding = true;
+            if (wayPointsCrossed == wayPointManager.GetLength(this))
+            {
+                if (this.gameObject.CompareTag("Enemy"))
+                {
+                    // Destroy Game Object
+                    //Destroy(this.gameObject);
+                }
+                else if (this.gameObject.CompareTag("Player"))
+                {
+                    // If player, load game over scene
+                    StartCoroutine(LoadGameOver());
+                }
+
+            }
+        }
+        else if (collider.CompareTag("EndPoint"))
+        {
+            if (wayPointsCrossed == wayPointManager.GetLength(this))
+            {
+                // Waypoints Crossed Reset
+                wayPointsCrossed = 0;
+
+                // Get time for player
+                
+
+                // Update lap
+                currentLap++;
+
+                // Send player to new location
+                Vector3 newLapPos = new(0, 1000, 0);
+                this.transform.position += newLapPos;
+
+                // Assign new waypoints and update
+                currentWaypoint = -1;
+                wayPointManager.UpdateWaypoint(this);
+            }
+        }
+        else if (collider.CompareTag("Waypoint"))
+        {
+            wayPointsCrossed++;
             wayPointManager.UpdateWaypoint(this);
         }
-        StartCoroutine(Reset());
     }
-
-    IEnumerator Reset()
+    IEnumerator LoadGameOver()
     {
-        yield return new WaitForEndOfFrame();
-        isColliding = false;
+        yield return new WaitForSeconds(0.5f);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GameOverScene");
     }
-
 }
