@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class SceneManager : MonoBehaviour
 {
     public float delayAmount = 1f;
-    public float timer;
+    public float stopwatch;
     public int countdown = 3;
+    public TMP_Text countdownTxt;
 
     public AudioSource teleportation;
     public GameObject image;
@@ -17,19 +19,21 @@ public class SceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        timer = 0;
+        stopwatch = 0;
         racingEnabled = true;
         ToggleRacingScripts();
         StartCoroutine(RaceCountdown());
-        ToggleRacingScripts();
-        // UI text for GO!
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Todo: Update player position
-        UpdatePosition();
+        // Updates player position
+        if (countdown <= 0)
+        {
+            stopwatch += Time.deltaTime;
+            UpdatePosition();
+        }
     }
 
     public void PlayAgain()
@@ -47,7 +51,6 @@ public class SceneManager : MonoBehaviour
     {
         teleportation.Play();
         image.SetActive(true);
-        
     }
 
     private void UpdatePosition()
@@ -115,7 +118,7 @@ public class SceneManager : MonoBehaviour
             foreach (GameObject racer in racers)
             {
                 // Check if player or enemy
-                if (racer.gameObject.tag == "Player")
+                if (racer.CompareTag("Player"))
                 {
                     racer.GetComponent<PlayerController>().enabled = false;
                 } else
@@ -129,8 +132,7 @@ public class SceneManager : MonoBehaviour
             foreach (GameObject racer in racers)
             {
                 // Check if player or enemy
-                // Check if player or enemy
-                if (racer.gameObject.tag == "Player")
+                if (racer.CompareTag("Player"))
                 {
                     racer.GetComponent<PlayerController>().enabled = true;
                 }
@@ -145,12 +147,23 @@ public class SceneManager : MonoBehaviour
 
     IEnumerator RaceCountdown()
     {
+        countdownTxt.text = countdown.ToString();
         yield return new WaitForSeconds(1);
-        // Update canvas text
         countdown--;
         if (countdown > 0)
         {
             StartCoroutine(RaceCountdown());
+        } else
+        {
+            ToggleRacingScripts();
+            StartCoroutine(CountDownDisplay());
         }
+    }
+
+    IEnumerator CountDownDisplay()
+    {
+        countdownTxt.text = "GO";
+        yield return new WaitForSeconds(0.5f);
+        countdownTxt.enabled = false;
     }
 }
