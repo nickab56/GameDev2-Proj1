@@ -13,6 +13,7 @@ public class WayPoints : MonoBehaviour
     Vector3 pointOnTarget;
 
     private EnemyController EnemyAi;
+    private bool isColliding = false;
 
     void Start()
     {
@@ -20,12 +21,13 @@ public class WayPoints : MonoBehaviour
         dir = Vector3.zero;
         SortWaypoints();
         currentWaypointTarget = waypoints[0];
-        //pointOnTarget = RandomPointInWaypoint(waypoints[currentWaypoint]);
+        pointOnTarget = RandomPointInWaypoint(waypoints[currentWaypoint]);
     }
 
     public Vector3 EvaluateWaypoint()
     {
-        dir = waypoints[currentWaypoint].transform.position - this.transform.position;
+        dir = pointOnTarget - this.transform.position;
+        //dir = waypoints[currentWaypoint].transform.position - this.transform.position;
         dir.Normalize();
         return dir;
     }
@@ -33,21 +35,20 @@ public class WayPoints : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        isColliding = false;
     }
 
     private void OnTriggerEnter(Collider collider)
     {
+        if (isColliding) return;
+        isColliding = true;
         if (waypoints.Contains(collider.gameObject))
         {
-            int index = System.Array.FindIndex(waypoints, x => x.name == collider.gameObject.name);
-            if (currentWaypoint == index)
-            {
-                currentWaypoint++;
-                currentWaypoint %= waypoints.Length;
-                pointOnTarget = RandomPointInWaypoint(waypoints[currentWaypoint]);
-            }
+            currentWaypoint++;
+            currentWaypoint %= waypoints.Length;
+            pointOnTarget = RandomPointInWaypoint(waypoints[currentWaypoint]);
         }
+        StartCoroutine(Reset());
     }
 
     private void SortWaypoints()
@@ -61,4 +62,10 @@ public class WayPoints : MonoBehaviour
         Vector3 point = new(Random.Range(bounds.min.x, bounds.max.x), this.transform.position.y, Random.Range(bounds.min.z, bounds.max.z));
         return point;
     }
+    IEnumerator Reset()
+    {
+        yield return new WaitForEndOfFrame();
+        isColliding = false;
+    }
+
 }

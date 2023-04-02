@@ -41,15 +41,11 @@ public class EnemyController : MonoBehaviour
             dir = ProcessAI();
             temp = currentSpeed * Time.deltaTime * dir;
         }
-
-        Vector3 newPosition = new(temp.x, 0, temp.x);
-        Debug.Log(newPosition);
-        Vector3.Lerp(this.transform.position, this.transform.position + newPosition, 0.00001f);
-        //this.transform.position += new Vector3(temp.x, 0, temp.z);
+        this.transform.position += new Vector3(temp.x, 0, temp.z);
 
         if (dir != Vector3.zero)
         {
-            this.transform.forward = Vector3.Lerp(this.transform.forward, dir, 3.0f * Time.deltaTime);
+            this.transform.forward = Vector3.Lerp(this.transform.forward, dir, 5.0f * Time.deltaTime);
         }
     }
 
@@ -100,13 +96,13 @@ public class EnemyController : MonoBehaviour
         {
             case AIDifficulty.EASY:
                 lerpConstant = 0.5f;
-                return Random.Range(5f, 7f); // 15, 17
+                return Random.Range(15f, 17f); // 15, 17
             case AIDifficulty.MEDIUM:
                 lerpConstant = 0.25f;
-                return Random.Range(9f, 11f); // 22.5, 26
+                return Random.Range(22.5f, 26f); // 22.5, 26
             case AIDifficulty.HARD:
                 lerpConstant = 0.1f;
-                return Random.Range(13f, 15f); // 30, 35
+                return Random.Range(30f, 35f); // 30, 35
             default:
                 break;
         }
