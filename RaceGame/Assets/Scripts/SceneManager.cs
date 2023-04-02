@@ -7,10 +7,13 @@ public class SceneManager : MonoBehaviour
 {
     public float delayAmount = 1f;
 
+    public AudioSource teleportation;
+    public GameObject image;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        Teleport();
     }
 
     // Update is called once per frame
@@ -29,6 +32,13 @@ public class SceneManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delayAmount);
         UnityEngine.SceneManagement.SceneManager.LoadScene("SplashScene");
+    }
+
+    public void Teleport()
+    {
+        teleportation.Play();
+        image.SetActive(true);
+        
     }
 
     private void UpdatePosition()
