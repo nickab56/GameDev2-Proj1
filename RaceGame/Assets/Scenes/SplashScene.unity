@@ -872,6 +872,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1952738112}
   - component: {fileID: 1952738113}
+  - component: {fileID: 1952738114}
   m_Layer: 0
   m_Name: SceneManager
   m_TagString: SceneManager
@@ -906,6 +907,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a292ef36999d7d94da8c7ec667f8862c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delayAmount: 0.75
+--- !u!114 &1952738114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1952738111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a2eff7e6f32c034fb388c7ae4c1ce0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeCount: 0
+  HighTime: 0
+  RaceFinished: 0
 --- !u!1 &2038590825
 GameObject:
   m_ObjectHideFlags: 0

@@ -58,6 +58,7 @@ public class WayPoints : MonoBehaviour
                 else if (this.gameObject.CompareTag("Player"))
                 {
                     // If player, load game over scene
+                    Constants.C.RaceFinished = true;
                     StartCoroutine(LoadGameOver());
                 }
 
