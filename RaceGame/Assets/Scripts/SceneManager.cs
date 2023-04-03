@@ -14,6 +14,11 @@ public class SceneManager : MonoBehaviour
     public AudioSource teleportation;
     public GameObject image;
 
+    float pastTime = 9999;
+    public string playerPrefHighScoreKey = "playerBestTime";
+
+    private const string highScoreKey = "best_time";
+
     private bool racingEnabled;
 
     // Start is called before the first frame update
@@ -23,6 +28,18 @@ public class SceneManager : MonoBehaviour
         racingEnabled = true;
         ToggleRacingScripts();
         StartCoroutine(RaceCountdown());
+
+        if (PlayerPrefs.HasKey(highScoreKey))   // key exists
+        {
+            pastTime = PlayerPrefs.GetFloat(highScoreKey);
+            Debug.Log("Found Score " + pastTime);
+
+        }
+        else
+        {
+            PlayerPrefs.SetFloat(highScoreKey, stopwatch);
+            Debug.Log("Setting high score");
+        }
     }
 
     // Update is called once per frame
@@ -34,6 +51,21 @@ public class SceneManager : MonoBehaviour
             stopwatch += Time.deltaTime;
             UpdatePosition();
         }
+    }
+
+    private void OnDisable()
+    {
+
+        if (Constants.C.RaceFinished == true)
+        {
+            if (stopwatch < pastTime && pastTime != 0)
+            {
+                PlayerPrefs.SetFloat(highScoreKey, stopwatch);
+            }
+            Constants.C.timeCount = stopwatch;
+            Constants.C.HighTime = PlayerPrefs.GetFloat(highScoreKey);
+        }
+
     }
 
     public void PlayAgain()
