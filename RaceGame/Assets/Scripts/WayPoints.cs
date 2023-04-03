@@ -89,6 +89,7 @@ public class WayPoints : MonoBehaviour
                 // Send player to new location
                 Vector3 newLapPos = new(0, 1000, 0);
                 this.transform.position += newLapPos;
+                sceneManager.GetComponent<ChangeSkybox>().enabled = true;
 
                 // Assign new waypoints and update
                 currentWaypoint = -1;
