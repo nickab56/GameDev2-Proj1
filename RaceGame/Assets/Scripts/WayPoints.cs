@@ -5,31 +5,33 @@ using UnityEngine;
 
 public class WayPoints : MonoBehaviour
 {
-    public GameObject[] waypoints;
+    public int currentWaypoint;
+    public double distanceFromWaypoint;
+    public int currentLap;
+
     public Vector3 dir;
-    public int currentWaypoint = 0;
-    public float distanceFromWaypoint = 0;
+    public Vector3 pointOnTarget;
 
-    GameObject currentWaypointTarget;
-    Vector3 pointOnTarget;
+    public WayPointManager wayPointManager;
+    public SceneManager sceneManager;
 
-    private EnemyController EnemyAi;
     private bool isColliding = false;
+    private int wayPointsCrossed;
 
     void Start()
     {
-        EnemyAi = this.GetComponent<EnemyController>();
+        currentWaypoint = 0;
+        distanceFromWaypoint = 0;
+        wayPointsCrossed = 0;
         dir = Vector3.zero;
-        SortWaypoints();
-        currentWaypointTarget = waypoints[0];
-        pointOnTarget = RandomPointInWaypoint(waypoints[currentWaypoint]);
+        currentLap = 1;
+        pointOnTarget = wayPointManager.RandomPointInWaypoint(wayPointManager.mp1Waypoints[0]);
     }
 
     public Vector3 EvaluateWaypoint()
     {
         dir = pointOnTarget - this.transform.position;
         distanceFromWaypoint = Vector3.Distance(this.transform.position, pointOnTarget);
-        //dir = waypoints[currentWaypoint].transform.position - this.transform.position;
         dir.Normalize();
         return dir;
     }
@@ -44,31 +46,65 @@ public class WayPoints : MonoBehaviour
     {
         if (isColliding) return;
         isColliding = true;
-        if (waypoints.Contains(collider.gameObject))
+        if (collider.CompareTag("FinalPoint"))
         {
-            currentWaypoint++;
-            currentWaypoint %= waypoints.Length;
-            pointOnTarget = RandomPointInWaypoint(waypoints[currentWaypoint]);
+            if (wayPointsCrossed == wayPointManager.GetLength(this))
+            {
+                if (this.gameObject.CompareTag("Enemy"))
+                {
+                    // Get time
+                    this.gameObject.GetComponent<EnemyController>().final = sceneManager.stopwatch;
+                }
+                else if (this.gameObject.CompareTag("Player"))
+                {
+                    // Get time
+                    this.gameObject.GetComponent<PlayerController>().final = sceneManager.stopwatch;
+
+                    // If player, load game over scene
+                    Constants.C.RaceFinished = true;
+                    StartCoroutine(LoadGameOver());
+                }
+
+            }
         }
-        StartCoroutine(Reset());
-    }
+        else if (collider.CompareTag("EndPoint"))
+        {
+            if (wayPointsCrossed == wayPointManager.GetLength(this))
+            {
+                // Waypoints Crossed Reset
+                wayPointsCrossed = 0;
 
-    private void SortWaypoints()
+                // Get time for player
+                if (this.gameObject.CompareTag("Player"))
+                {
+                    this.gameObject.GetComponent<PlayerController>().lap1 = sceneManager.stopwatch;
+                } else
+                {
+                    this.gameObject.GetComponent<EnemyController>().lap1 = sceneManager.stopwatch;
+                }
+
+                // Update lap
+                currentLap++;
+
+                // Send player to new location
+                Vector3 newLapPos = new(0, 1000, 0);
+                this.transform.position += newLapPos;
+                sceneManager.GetComponent<ChangeSkybox>().enabled = true;
+
+                // Assign new waypoints and update
+                currentWaypoint = -1;
+                wayPointManager.UpdateWaypoint(this);
+            }
+        }
+        else if (collider.CompareTag("Waypoint"))
+        {
+            wayPointsCrossed++;
+            wayPointManager.UpdateWaypoint(this);
+        }
+    }
+    IEnumerator LoadGameOver()
     {
-        waypoints = waypoints.OrderBy(x => x.name).ToArray();
+        yield return new WaitForSeconds(0.5f);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GameOverScene");
     }
-
-    private Vector3 RandomPointInWaypoint(GameObject waypoint)
-    {
-        Bounds bounds = waypoint.GetComponent<BoxCollider>().bounds;
-        Vector3 point = new(Random.Range(bounds.min.x, bounds.max.x), this.transform.position.y, Random.Range(bounds.min.z, bounds.max.z));
-        return point;
-    }
-
-    IEnumerator Reset()
-    {
-        yield return new WaitForEndOfFrame();
-        isColliding = false;
-    }
-
 }

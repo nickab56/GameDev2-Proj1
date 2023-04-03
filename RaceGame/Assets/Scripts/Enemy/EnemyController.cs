@@ -41,6 +41,7 @@ public class EnemyController : MonoBehaviour
             dir = ProcessAI();
             temp = currentSpeed * Time.deltaTime * dir;
         }
+
         this.transform.position += new Vector3(temp.x, 0, temp.z);
 
         if (dir != Vector3.zero)
@@ -80,9 +81,14 @@ public class EnemyController : MonoBehaviour
     {
         float dist = Vector3.Distance(this.transform.position, player.transform.position);
 
+        // Adjust AI's speed based on distance from player
         if (dist <= 50.0f)
         {
             currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed, lerpConstant * Time.deltaTime);
+        }
+        else if (dist > 50.0f && player.GetComponent<PlayerController>().position > position)
+        {
+            currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed * 2, lerpConstant * Time.deltaTime);
         }
         else
         {
@@ -96,13 +102,13 @@ public class EnemyController : MonoBehaviour
         {
             case AIDifficulty.EASY:
                 lerpConstant = 0.5f;
-                return Random.Range(15f, 17f);
+                return Random.Range(7f, 9f);
             case AIDifficulty.MEDIUM:
                 lerpConstant = 0.25f;
-                return Random.Range(22.5f, 26f);
+                return Random.Range(11f, 13f);
             case AIDifficulty.HARD:
                 lerpConstant = 0.1f;
-                return Random.Range(30f, 35f);
+                return Random.Range(15f, 17f);
             default:
                 break;
         }

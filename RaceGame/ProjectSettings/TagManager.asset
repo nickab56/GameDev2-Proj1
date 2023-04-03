@@ -18,6 +18,7 @@ TagManager:
   - FinalPoint
   - Track90
   - Waypoint
+  - EndPoint
   layers:
   - Default
   - TransparentFX
