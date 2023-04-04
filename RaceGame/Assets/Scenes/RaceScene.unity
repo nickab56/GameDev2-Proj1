@@ -5594,6 +5594,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NomralSkybox: {fileID: 2100000, guid: d00f275b0046c4f40878a1a6eb2322e2, type: 2}
   DestroyedSkybox: {fileID: 2100000, guid: 579a42aac7c64124aa34cb58c263acec, type: 2}
+  Particles: {fileID: 1280751744}
 --- !u!114 &849893913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8527,6 +8528,11 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2.1244822, z: 12.043907}
   m_Center: {x: 0, y: 0.5622411, z: 0.07238674}
+--- !u!1 &1280751744 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8328392761022529331, guid: 265ce30be2dca2c4faf02e74da2ff4c3, type: 3}
+  m_PrefabInstance: {fileID: 1112571754}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1281950122
 GameObject:
   m_ObjectHideFlags: 0
