@@ -9,7 +9,11 @@ public class SceneManager : MonoBehaviour
     public float delayAmount = 1f;
     public float stopwatch;
     public int countdown = 3;
+
     public TMP_Text countdownTxt;
+    public TMP_Text positionTxt;
+    public TMP_Text lapTxt;
+    public TMP_Text stopwatchTxt;
 
     public WayPointManager wayPointManager;
 
@@ -26,6 +30,11 @@ public class SceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Disable Text
+        positionTxt.enabled = false;
+        stopwatchTxt.enabled = false;
+        lapTxt.enabled = false;
+
         stopwatch = 0;
         racingEnabled = true;
         ToggleRacingScripts();
@@ -48,6 +57,7 @@ public class SceneManager : MonoBehaviour
         if (countdown <= 0)
         {
             stopwatch += Time.deltaTime;
+            DisplayTime();
             UpdatePosition();
         }
     }
@@ -122,7 +132,9 @@ public class SceneManager : MonoBehaviour
             GameObject gameObject = position.Value;
             if (gameObject.CompareTag("Player"))
             {
-                gameObject.GetComponent<PlayerController>().position = positions.IndexOfKey(position.Key) + 1;
+                int newPosition = positions.IndexOfKey(position.Key) + 1;
+                gameObject.GetComponent<PlayerController>().position = newPosition;
+                positionTxt.text = newPosition + " / " + racers.Length;
             } else
             {
                 gameObject.GetComponent<EnemyController>().position = positions.IndexOfKey(position.Key) + 1;
@@ -170,6 +182,14 @@ public class SceneManager : MonoBehaviour
         }
     }
 
+    private void DisplayTime()
+    {
+        int ms = (int) stopwatch * 1000;
+        System.TimeSpan ts = System.TimeSpan.FromMilliseconds(ms);
+        string rem = ((stopwatch % 1) * 100).ToString("##");
+        stopwatchTxt.text = ts.ToString(@"hh\:mm\:ss") + "." + rem;
+    }
+
     IEnumerator RaceCountdown()
     {
         countdownTxt.text = countdown.ToString();
@@ -190,6 +210,10 @@ public class SceneManager : MonoBehaviour
         countdownTxt.text = "GO";
         yield return new WaitForSeconds(0.5f);
         countdownTxt.enabled = false;
+        // Enable other texts
+        positionTxt.enabled = true;
+        stopwatchTxt.enabled = true;
+        lapTxt.enabled = true;
     }
 
     IEnumerator LoadSplash()

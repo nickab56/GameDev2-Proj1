@@ -63,7 +63,7 @@ public class WayPoints : MonoBehaviour
                 sceneManager.GameOver();
             }
             // If not a player, ensure the AI completed the entire course
-            else if (wayPointsCrossed == wayPointManager.GetLength(this))
+            else if (wayPointsCrossed > wayPointManager.GetLength(this)/2)
             {
                 // Get time
                 this.gameObject.GetComponent<EnemyController>().final = sceneManager.stopwatch;
@@ -80,6 +80,7 @@ public class WayPoints : MonoBehaviour
 
                 // Update lap
                 currentLap++;
+                sceneManager.lapTxt.text = "Lap " + currentLap + " / 2";
 
                 // Send player to new location
                 Vector3 newLapPos = new(0, 1000, 0);
@@ -93,7 +94,7 @@ public class WayPoints : MonoBehaviour
                 wayPointManager.UpdateWaypoint(this);
             }
             // If not a player, ensure the AI completed the entire course
-            else if (wayPointsCrossed == wayPointManager.GetLength(this))
+            else if (wayPointsCrossed > wayPointManager.GetLength(this)/2)
             {
                 // Reset waypoints crossed
                 wayPointsCrossed = 0;
