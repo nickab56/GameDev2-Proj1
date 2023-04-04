@@ -8,6 +8,7 @@ public class WayPoints : MonoBehaviour
     public int currentWaypoint;
     public double distanceFromWaypoint;
     public int currentLap;
+    public int wayPointsCrossed;
 
     public Vector3 dir;
     public Vector3 pointOnTarget;
@@ -16,7 +17,6 @@ public class WayPoints : MonoBehaviour
     public SceneManager sceneManager;
 
     private bool isColliding = false;
-    private int wayPointsCrossed;
 
     void Start()
     {
@@ -32,6 +32,11 @@ public class WayPoints : MonoBehaviour
     {
         dir = pointOnTarget - this.transform.position;
         distanceFromWaypoint = Vector3.Distance(this.transform.position, pointOnTarget);
+        if (distanceFromWaypoint < 0.1f)
+        {
+            wayPointsCrossed++;
+            wayPointManager.UpdateWaypoint(this);
+        }
         dir.Normalize();
         return dir;
     }
@@ -48,40 +53,30 @@ public class WayPoints : MonoBehaviour
         isColliding = true;
         if (collider.CompareTag("FinalPoint"))
         {
-            if (wayPointsCrossed == wayPointManager.GetLength(this))
+            // Check if player (likely) finished the second lap
+            if (this.gameObject.CompareTag("Player") && wayPointsCrossed > 10)
             {
-                if (this.gameObject.CompareTag("Enemy"))
-                {
-                    // Get time
-                    this.gameObject.GetComponent<EnemyController>().final = sceneManager.stopwatch;
-                }
-                else if (this.gameObject.CompareTag("Player"))
-                {
-                    // Get time
-                    this.gameObject.GetComponent<PlayerController>().final = sceneManager.stopwatch;
+                // Get time
+                this.gameObject.GetComponent<PlayerController>().final = sceneManager.stopwatch;
 
-                    // If player, load game over scene
-                    Constants.C.RaceFinished = true;
-                    StartCoroutine(LoadGameOver());
-                }
-
+                // Load game over scene
+                sceneManager.GameOver();
+            }
+            // If not a player, ensure the AI completed the entire course
+            else if (wayPointsCrossed == wayPointManager.GetLength(this))
+            {
+                // Get time
+                this.gameObject.GetComponent<EnemyController>().final = sceneManager.stopwatch;
             }
         }
         else if (collider.CompareTag("EndPoint"))
         {
-            if (wayPointsCrossed == wayPointManager.GetLength(this))
+            // Check if player (likely) finished a lap
+            if (this.gameObject.CompareTag("Player") && wayPointsCrossed > 10)
             {
-                // Waypoints Crossed Reset
+                // Reset waypoints crossed
                 wayPointsCrossed = 0;
-
-                // Get time for player
-                if (this.gameObject.CompareTag("Player"))
-                {
-                    this.gameObject.GetComponent<PlayerController>().lap1 = sceneManager.stopwatch;
-                } else
-                {
-                    this.gameObject.GetComponent<EnemyController>().lap1 = sceneManager.stopwatch;
-                }
+                this.gameObject.GetComponent<PlayerController>().lap1 = sceneManager.stopwatch;
 
                 // Update lap
                 currentLap++;
@@ -89,22 +84,37 @@ public class WayPoints : MonoBehaviour
                 // Send player to new location
                 Vector3 newLapPos = new(0, 1000, 0);
                 this.transform.position += newLapPos;
+
+                // Update skybox for player
                 sceneManager.GetComponent<ChangeSkybox>().enabled = true;
 
                 // Assign new waypoints and update
                 currentWaypoint = -1;
                 wayPointManager.UpdateWaypoint(this);
             }
+            // If not a player, ensure the AI completed the entire course
+            else if (wayPointsCrossed == wayPointManager.GetLength(this))
+            {
+                // Reset waypoints crossed
+                wayPointsCrossed = 0;
+                this.gameObject.GetComponent<EnemyController>().lap1 = sceneManager.stopwatch;
+
+                // Update lap
+                currentLap++;
+
+                // Send enemy to new location
+                Vector3 newLapPos = new(0, 1000, 0);
+                this.transform.position += newLapPos;
+
+                // Assign new waypoints and update
+                currentWaypoint = -1;
+                wayPointManager.UpdateWaypoint(this);
+            }
         }
-        else if (collider.CompareTag("Waypoint"))
+        if (this.gameObject.CompareTag("Player") && collider.CompareTag("Waypoint"))
         {
             wayPointsCrossed++;
             wayPointManager.UpdateWaypoint(this);
         }
-    }
-    IEnumerator LoadGameOver()
-    {
-        yield return new WaitForSeconds(0.5f);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("GameOverScene");
     }
 }

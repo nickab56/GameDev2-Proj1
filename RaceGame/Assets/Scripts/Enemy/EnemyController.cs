@@ -42,7 +42,8 @@ public class EnemyController : MonoBehaviour
             temp = currentSpeed * Time.deltaTime * dir;
         }
 
-        this.transform.position += new Vector3(temp.x, 0, temp.z);
+        this.transform.position += temp;
+        //this.transform.position += new Vector3(temp.x, 0, temp.z);
 
         if (dir != Vector3.zero)
         {
@@ -86,7 +87,7 @@ public class EnemyController : MonoBehaviour
         {
             currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed, lerpConstant * Time.deltaTime);
         }
-        else if (dist > 50.0f && player.GetComponent<PlayerController>().position > position)
+        else if (dist > 50.0f && player.GetComponent<PlayerController>().position < position)
         {
             currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed * 2, lerpConstant * Time.deltaTime);
         }

@@ -11,6 +11,8 @@ public class SceneManager : MonoBehaviour
     public int countdown = 3;
     public TMP_Text countdownTxt;
 
+    public WayPointManager wayPointManager;
+
     public AudioSource teleportation;
     public GameObject image;
 
@@ -32,13 +34,10 @@ public class SceneManager : MonoBehaviour
         if (PlayerPrefs.HasKey(highScoreKey))   // key exists
         {
             pastTime = PlayerPrefs.GetFloat(highScoreKey);
-            Debug.Log("Found Score " + pastTime);
-
         }
         else
         {
             PlayerPrefs.SetFloat(highScoreKey, stopwatch);
-            Debug.Log("Setting high score");
         }
     }
 
@@ -53,30 +52,14 @@ public class SceneManager : MonoBehaviour
         }
     }
 
-    private void OnDisable()
-    {
-
-        if (Constants.C.RaceFinished == true)
-        {
-            if (stopwatch < pastTime && pastTime != 0)
-            {
-                PlayerPrefs.SetFloat(highScoreKey, stopwatch);
-            }
-            Constants.C.timeCount = stopwatch;
-            Constants.C.HighTime = PlayerPrefs.GetFloat(highScoreKey);
-        }
-
-    }
-
     public void PlayAgain()
     {
         StartCoroutine(LoadSplash());
     }
 
-    IEnumerator LoadSplash()
+    public void GameOver()
     {
-        yield return new WaitForSeconds(delayAmount);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("SplashScene");
+        StartCoroutine(LoadGameOver());
     }
 
     public void Teleport()
@@ -115,12 +98,22 @@ public class SceneManager : MonoBehaviour
             }
 
             // Get current waypoint and subtract it from n
-            n -= racer.GetComponent<WayPoints>().currentWaypoint;
+            if (racer.GetComponent<WayPoints>().currentWaypoint == 0 && racer.GetComponent<WayPoints>().wayPointsCrossed > 0)
+            {
+                // This means that the current waypoint is not actually 0 but the length of waypoints
+                n -= wayPointManager.GetLength(racer.GetComponent<WayPoints>());
+            } else
+            {
+                n -= racer.GetComponent<WayPoints>().currentWaypoint;
+            }
 
             // Get distance from next waypoint and subtract it from n
             n -= (racer.GetComponent<WayPoints>().distanceFromWaypoint / 10000);
 
-            positions.Add(n, racer);
+            if (!positions.ContainsKey(n))
+            {
+                positions.Add(n, racer);
+            }
         }
 
         // Update positions using sorted dictionary
@@ -197,5 +190,24 @@ public class SceneManager : MonoBehaviour
         countdownTxt.text = "GO";
         yield return new WaitForSeconds(0.5f);
         countdownTxt.enabled = false;
+    }
+
+    IEnumerator LoadSplash()
+    {
+        yield return new WaitForSeconds(delayAmount);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("SplashScene");
+    }
+
+    IEnumerator LoadGameOver()
+    {
+        if (stopwatch < pastTime && pastTime != 0)
+        {
+            PlayerPrefs.SetFloat(highScoreKey, stopwatch);
+        }
+        Constants.C.timeCount = stopwatch;
+        Constants.C.HighTime = PlayerPrefs.GetFloat(highScoreKey);
+        // Wait for delayAmount before going to game over scene
+        yield return new WaitForSeconds(delayAmount);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GameOverScene");
     }
 }
