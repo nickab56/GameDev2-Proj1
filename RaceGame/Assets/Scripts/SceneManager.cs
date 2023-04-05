@@ -13,7 +13,6 @@ public class SceneManager : MonoBehaviour
     public TMP_Text countdownTxt;
     public TMP_Text positionTxt;
     public TMP_Text lapTxt;
-    public TMP_Text stopwatchTxt;
 
     public WayPointManager wayPointManager;
 
@@ -32,7 +31,6 @@ public class SceneManager : MonoBehaviour
     {
         // Disable Text
         positionTxt.enabled = false;
-        stopwatchTxt.enabled = false;
         lapTxt.enabled = false;
 
         stopwatch = 0;
@@ -57,7 +55,6 @@ public class SceneManager : MonoBehaviour
         if (countdown <= 0)
         {
             stopwatch += Time.deltaTime;
-            DisplayTime();
             UpdatePosition();
         }
     }
@@ -81,7 +78,7 @@ public class SceneManager : MonoBehaviour
     private void UpdatePosition()
     {
         // FORMAT:
-        // Format = (Final time (in s) | Max time (1 hr in s) + ((1 | 0) * 100) - currentWaypoint - (distance/1000)
+        // Format = (Final time (in s) | Max time (7200s) + ((1 | 0) * 100) - currentWaypoint + (distance/1000)
         // If not complete, set to max time in seconds, 1 * 100 if the racer still has a lap to go (0 means no), current waypoint, distance from next waypoint
         SortedList<double, GameObject> positions = new();
 
@@ -108,7 +105,7 @@ public class SceneManager : MonoBehaviour
             }
 
             // Get current waypoint and subtract it from n
-            if (racer.GetComponent<WayPoints>().currentWaypoint == 0 && racer.GetComponent<WayPoints>().wayPointsCrossed > 0)
+            if (racer.GetComponent<WayPoints>().currentWaypoint == 0 && racer.GetComponent<WayPoints>().wayPointsCrossed > 1)
             {
                 // This means that the current waypoint is not actually 0 but the length of waypoints
                 n -= wayPointManager.GetLength(racer.GetComponent<WayPoints>());
@@ -118,7 +115,7 @@ public class SceneManager : MonoBehaviour
             }
 
             // Get distance from next waypoint and subtract it from n
-            n -= (racer.GetComponent<WayPoints>().distanceFromWaypoint / 10000);
+            n += (racer.GetComponent<WayPoints>().distanceFromWaypoint / 10000);
 
             if (!positions.ContainsKey(n))
             {
@@ -182,14 +179,6 @@ public class SceneManager : MonoBehaviour
         }
     }
 
-    private void DisplayTime()
-    {
-        int ms = (int) stopwatch * 1000;
-        System.TimeSpan ts = System.TimeSpan.FromMilliseconds(ms);
-        string rem = ((stopwatch % 1) * 100).ToString("##");
-        stopwatchTxt.text = ts.ToString(@"hh\:mm\:ss") + "." + rem;
-    }
-
     IEnumerator RaceCountdown()
     {
         countdownTxt.text = countdown.ToString();
@@ -212,7 +201,6 @@ public class SceneManager : MonoBehaviour
         countdownTxt.enabled = false;
         // Enable other texts
         positionTxt.enabled = true;
-        stopwatchTxt.enabled = true;
         lapTxt.enabled = true;
     }
 

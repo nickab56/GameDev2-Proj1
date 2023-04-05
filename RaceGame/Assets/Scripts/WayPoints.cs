@@ -115,7 +115,7 @@ public class WayPoints : MonoBehaviour
         if (this.gameObject.CompareTag("Player") && collider.CompareTag("Waypoint"))
         {
             wayPointsCrossed++;
-            wayPointManager.UpdateWaypoint(this);
+            wayPointManager.UpdateWaypoint(this, collider);
         }
     }
 }
